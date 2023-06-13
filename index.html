@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Project DEnergy</title>
+    <link rel="stylesheet" href="./src/css/style.css" />
+    <script src="src/app.ts" defer type="module"></script>
+  </head>
+  <body>
+    <header>
+      <h1>Project DEnergy</h1>
+      <div class="dark-energy-bar">
+        <button id="dark-energy-button">D</button>
+        <div id="dark-energy-bar" class="bar">
+          <div class="progress"></div>
+          <span>0/1000</span>
+        </div>
+      </div>
+      <div class="flex">
+        <button id="save-button" class="btn-link">save</button>
+        <p>alpha</p>
+      </div>
+    </header>
+    <main class="flex w-100">
+      <div class="flex-grow-1">
+        <button id="make-wood-btn">
+          <p>Make a wood</p>
+          <p>-20 dark energy</p>
+        </button>
+        <hr />
+        <button id="hut-btn">
+          <p>Hut</p>
+          <p>10 wood</p>
+        </button>
+      </div>
+      <div class="flex-grow-1">
+        <p>wood: <span id="wood-text-value">0/100</span></p>
+      </div>
+    </main>
+  </body>
+</html>

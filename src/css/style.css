@@ -1,0 +1,74 @@
+body {
+  min-height: 100vh;
+  margin: 0;
+}
+h1, h2, h3, h4, h5, h6, p {
+  margin: 0;
+}
+
+header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  border-bottom: 1px solid gray;
+  padding: 0.5rem 1rem;
+}
+header h1 {
+  font-size: 1em;
+}
+main {
+  margin: 1rem 2rem;
+}
+/* utility classes*/
+.flex {
+  display: flex;
+}
+.w-100 {
+  width: 100%;
+}
+.flex-grow-1 {
+  flex-grow: 1;
+}
+
+/* other classes */
+.dark-energy-bar {
+  width: 10rem;
+  height: 1.5rem;
+  border: 1px solid black;
+  display: flex;
+  flex-direction: row;
+}
+.dark-energy-bar button {
+  border-radius: 0;
+  border: none;
+  width: 1.5rem;
+}
+.dark-energy-bar .bar {
+  background-color: darkgray;
+  width: 100%;
+  position: relative;
+}
+.dark-energy-bar .progress {
+  position: absolute;
+  left: 0;
+  height: 100%;
+  background-color: purple;
+}
+.dark-energy-bar span {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  padding-top: 0.1rem;
+}
+
+.btn-link {
+  border: none;
+  background: none;
+  text-decoration: underline;
+  padding: 0 0.5rem;
+}
+.btn-link:hover {
+  color: blue;
+  cursor: pointer;
+}
