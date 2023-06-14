@@ -1,7 +1,7 @@
-export const hut = {
-  capacity: 3,
+export const HUT = {
+  capacity: 2,
   baseCost: {
-    wood: 20,
+    wood: 10,
   },
   priceMultiplier: 2,
 };

@@ -26,10 +26,29 @@ main {
 .w-100 {
   width: 100%;
 }
-.flex-grow-1 {
-  flex-grow: 1;
+.flex-1 {
+  flex: 50%;
 }
-
+.justify-center {
+  justify-content: center;
+}
+.d-none {
+  display: none;
+}
+.d-block {
+  display: block;
+}
+/* button styles*/
+.text-button {
+  background: none;
+  border: none;
+  height: 1rem;
+  text-decoration: underline;
+}
+.text-button:hover {
+  cursor: pointer;
+  color: blue;
+}
 /* other classes */
 .dark-energy-bar {
   width: 10rem;
@@ -71,4 +90,11 @@ main {
 .btn-link:hover {
   color: blue;
   cursor: pointer;
+}
+.resource-window {
+  border-left: 1px solid black;
+  padding-left: 1rem;
+}
+.main-window {
+  padding-right: 1rem;
 }

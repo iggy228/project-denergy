@@ -1,21 +1,9 @@
 import { GameResource } from "./game-resource";
 
-export class GameManager {
-  private static instance: GameManager;
-
-  private constructor() {}
-
-  public static getInstance(): GameManager {
-    if (!GameManager.instance) {
-      GameManager.instance = new GameManager();
-    }
-
-    return GameManager.instance;
-  }
-
-  // other things
+export class ResourceManager {
   darkEnergy: GameResource;
   wood: GameResource;
+  people: GameResource;
 
   loadDataFromStorage() {
     const savedData = localStorage.getItem("production");

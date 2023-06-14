@@ -5,8 +5,9 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "source": "index.html",
   "scripts": {
-    "dev": "parcel index.html",
+    "dev": "parcel",
     "build": "parcel build index.html"
   },
   "devDependencies": {
