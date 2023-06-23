@@ -32,10 +32,10 @@ main {
 .justify-center {
   justify-content: center;
 }
-.d-none {
+.hide {
   display: none;
 }
-.d-block {
+.show {
   display: block;
 }
 /* button styles*/

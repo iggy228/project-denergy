@@ -23,32 +23,8 @@ export class GameResource {
   addValue(value: number) {
     if (this.value < this.capacity) {
       this.value += value;
-      this.notifyListeners();
       return;
     }
     this.value = this.capacity;
-    this.notifyListeners();
-  }
-
-  removeValue(value: number) {
-    if (this.value - value < 0) {
-      this.value = 0;
-      this.notifyListeners();
-      return;
-    }
-    this.value -= value;
-    this.notifyListeners();
-  }
-  // listener functions
-  addListener(listener: (resource: GameResource) => void) {
-    this.listeners.push(listener);
-  }
-  removeAllListeners() {
-    this.listeners = [];
-  }
-  private notifyListeners() {
-    for (const listener of this.listeners) {
-      listener(this);
-    }
   }
 }

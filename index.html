@@ -36,22 +36,24 @@
     </nav>
     <main class="flex w-100">
       <div class="flex-1 main-window">
-        <div id="magicView" class="d-none">
+        <div id="magicView" class="hide">
           <button id="make-wood-btn">
             <p>Make a wood</p>
             <p>-20 dark energy</p>
           </button>
         </div>
-        <div id="buildingsView" class="d-none">
+        <div id="buildingsView" class="hide">
           <button id="hut-btn">
+            <p></p>
+            <p></p>
+          </button>
+          <button id="totem-btn">
             <p></p>
             <p></p>
           </button>
         </div>
       </div>
-      <div class="flex-1 resource-window">
-        <p>wood: <span id="wood-text-value">0/100</span></p>
-      </div>
+      <div id="resource-window" class="flex-1 resource-window"></div>
     </main>
   </body>
 </html>

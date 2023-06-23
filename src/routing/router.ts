@@ -10,12 +10,12 @@ export class Router {
 
   constructor(defaultView: string) {
     this.currentViewName = defaultView;
-    $(`#${defaultView}`).removeClass("d-none").addClass("d-block");
+    $(`#${defaultView}`).removeClass("hide").addClass("show");
   }
 
   changeMainViewContent(view: string) {
-    $(`#${this.currentViewName}`).removeClass("d-block").addClass("d-none");
-    $(`#${view}`).removeClass("d-none").addClass("d-block");
+    $(`#${this.currentViewName}`).removeClass("show").addClass("hide");
+    $(`#${view}`).removeClass("hide").addClass("show");
     this.currentViewName = view;
   }
 }

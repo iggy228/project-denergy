@@ -2,15 +2,16 @@ import { EngineConstants } from "./config/engine-constants";
 import { ResourceConstants } from "./config/resources-constants";
 import { RouteNames } from "./constants/route-names";
 import { BuildingsManager } from "./game-objects/buildings-manager";
-import { HUT } from "./game-objects/hut";
-import { ResourceManager } from "./game-objects/resource-manager";
-import { Router } from "./game-objects/router";
+import { Buildings } from "./game-objects/buildings";
+import { ResourcesManager } from "./game-objects/resources-manager";
+import { Router } from "./routing/router";
 import { BuyButton } from "./ui/buy-button";
 import { DarkEnergyBar } from "./ui/dark-energy-bar";
 
 import $ from "jquery";
+import { ResourceWindow } from "./views/resource-window";
 
-let resourceManager: ResourceManager;
+let resourceManager: ResourcesManager;
 let buildingsManager: BuildingsManager;
 let darkEnergyBar: DarkEnergyBar;
 let woodText: JQuery<HTMLElement>;
@@ -28,50 +29,36 @@ function init() {
     router.changeMainViewContent(RouteNames.buildings)
   );
 
-  resourceManager = new ResourceManager();
+  resourceManager = new ResourcesManager();
   resourceManager.loadDataFromStorage();
   buildingsManager = new BuildingsManager(resourceManager);
 
+  new ResourceWindow(resourceManager);
   // dark energy bar
-  darkEnergyBar = new DarkEnergyBar();
-  darkEnergyBar.updateElement(
-    resourceManager.darkEnergy.value,
-    resourceManager.darkEnergy.capacity
-  );
-  darkEnergyBar.darkEnergyButtonEl.on("click", () => {
-    resourceManager.darkEnergy.addValue(ResourceConstants.energyAddValue);
-  });
-  resourceManager.darkEnergy.addListener((resource) => {
-    darkEnergyBar.updateElement(resource.value, resource.capacity);
-  });
 
   // save button
   const saveButton = $("#save-button");
   saveButton.on("click", () => resourceManager.saveDataToStorage());
-
-  // wood text
-  woodText = $("#wood-text-value");
-  woodText.text(
-    `${resourceManager.wood.value}/${resourceManager.wood.capacity}`
-  );
-  resourceManager.wood.addListener((resource) => {
-    woodText.text(`${resource.value}/${resource.capacity}`);
-  });
 
   // wood make button
   woodMakeButton = $("#make-wood-btn");
   const woodButton = woodMakeButton.get(0);
   if (woodButton) {
     woodButton.disabled =
-      resourceManager.darkEnergy.value < ResourceConstants.makeWoodBaseCost;
+      resourceManager.resources["dark_energy"].value <
+      ResourceConstants.makeWoodBaseCost;
   }
   woodMakeButton.on("click", () => {
-    resourceManager.darkEnergy.removeValue(ResourceConstants.makeWoodBaseCost);
-    resourceManager.wood.addValue(ResourceConstants.makeWoodAddValue);
+    resourceManager.changeValueBy(
+      "dark_energy",
+      -ResourceConstants.makeWoodBaseCost
+    );
+    resourceManager.changeValueBy("wood", ResourceConstants.makeWoodAddValue);
   });
-  resourceManager.darkEnergy.addListener((resource) => {
+  resourceManager.addListener((resources) => {
     if (woodButton) {
-      woodButton.disabled = resource.value < ResourceConstants.makeWoodBaseCost;
+      woodButton.disabled =
+        resources["dark_energy"].value < ResourceConstants.makeWoodBaseCost;
     }
   });
 
@@ -82,22 +69,22 @@ function init() {
       hutBuyButton.updateText(`Hut (${buildingsManager.hutsCount})`);
       hutBuyButton.updatePriceText(
         `${
-          HUT.baseCost.wood *
-          Math.pow(HUT.priceMultiplier, buildingsManager.hutsCount)
+          Buildings.HUT.baseCost.wood *
+          Math.pow(Buildings.HUT.priceMultiplier, buildingsManager.hutsCount)
         } wood`
       );
     },
     text: "Hut",
     priceText: `${
-      HUT.baseCost.wood *
-      Math.pow(HUT.priceMultiplier, buildingsManager.hutsCount)
+      Buildings.HUT.baseCost.wood *
+      Math.pow(Buildings.HUT.priceMultiplier, buildingsManager.hutsCount)
     } wood`,
   });
-  resourceManager.wood.addListener((resource) => {
+  resourceManager.addListener((resources) => {
     if (
-      resource.value <
-      HUT.baseCost.wood *
-        Math.pow(HUT.priceMultiplier, buildingsManager.hutsCount)
+      resources["wood"].value <
+      Buildings.HUT.baseCost.wood *
+        Math.pow(Buildings.HUT.priceMultiplier, buildingsManager.hutsCount)
     ) {
       hutBuyButton.disable();
     } else {
@@ -122,8 +109,6 @@ function gameLoop() {
   init();
 
   setInterval(() => {
-    resourceManager.updateResourcesValue();
-
     autoSaveData();
   }, EngineConstants.milisecondsPerTick);
 }
