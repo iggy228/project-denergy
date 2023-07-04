@@ -2,29 +2,7 @@ import { initialResourceValue } from "../config/initial-resource-value";
 import { Resource } from "../types/resource";
 
 export class ResourcesManager {
-  resources: { [key: string]: Resource } = {
-    dark_energy: {
-      name: "dark_energy",
-      capacity: 1000,
-      value: 0,
-      show: true,
-      color: "purple",
-    },
-    wood: {
-      name: "wood",
-      capacity: 100,
-      value: 0,
-      show: false,
-      color: "brown",
-    },
-    people: {
-      name: "people",
-      capacity: 0,
-      value: 0,
-      show: false,
-      color: "gray",
-    },
-  };
+  resources: { [key: string]: Resource } = {};
   listeners: ((resources: { [key: string]: Resource }) => void)[] = [];
 
   constructor() {

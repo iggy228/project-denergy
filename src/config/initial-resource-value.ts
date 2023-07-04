@@ -1,16 +1,16 @@
 import { Resource } from "../types/resource";
 
 export const initialResourceValue: { [key: string]: Resource } = {
-  dark_energy: {
-    name: "dark_energy",
+  mana: {
+    name: "mana",
     value: 50,
     capacity: 1000,
     show: true,
-    color: "purple",
+    color: "blue",
   },
   wood: {
     name: "wood",
-    value: 0,
+    value: 10,
     capacity: 100,
     show: true,
     color: "brown",

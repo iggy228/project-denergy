@@ -8,10 +8,8 @@ export class ResourceWindow {
     for (const key in resourceManager.resources) {
       this.resourceElements[key] = $(
         `<p>${key}: ${resourceManager.resources[key].value}/${resourceManager.resources[key].capacity}</p>`
-      ).addClass("hide");
-      this.resourceElements[key] = $("#resource-window").append(
-        this.resourceElements[key]
-      );
+      ).addClass(resourceManager.resources[key].show ? "show" : "hide");
+      $("#resource-window").append(this.resourceElements[key]);
     }
   }
 

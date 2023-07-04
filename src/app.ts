@@ -6,16 +6,16 @@ import { Buildings } from "./game-objects/buildings";
 import { ResourcesManager } from "./game-objects/resources-manager";
 import { Router } from "./routing/router";
 import { BuyButton } from "./ui/buy-button";
-import { DarkEnergyBar } from "./ui/dark-energy-bar";
 
 import $ from "jquery";
 import { ResourceWindow } from "./views/resource-window";
+import { MagicWindow } from "./views/magic-window";
+import { makeResourceString } from "./utils/utils";
 
 let resourceManager: ResourcesManager;
 let buildingsManager: BuildingsManager;
-let darkEnergyBar: DarkEnergyBar;
-let woodText: JQuery<HTMLElement>;
-let woodMakeButton: JQuery<HTMLButtonElement>;
+let resourceWindow: ResourceWindow;
+let magicWindow: MagicWindow;
 let router: Router;
 let hutBuyButton: BuyButton;
 
@@ -33,62 +33,45 @@ function init() {
   resourceManager.loadDataFromStorage();
   buildingsManager = new BuildingsManager(resourceManager);
 
-  new ResourceWindow(resourceManager);
-  // dark energy bar
+  resourceWindow = new ResourceWindow(resourceManager);
+  magicWindow = new MagicWindow();
 
   // save button
   const saveButton = $("#save-button");
   saveButton.on("click", () => resourceManager.saveDataToStorage());
 
-  // wood make button
-  woodMakeButton = $("#make-wood-btn");
-  const woodButton = woodMakeButton.get(0);
-  if (woodButton) {
-    woodButton.disabled =
-      resourceManager.resources["dark_energy"].value <
-      ResourceConstants.makeWoodBaseCost;
-  }
-  woodMakeButton.on("click", () => {
-    resourceManager.changeValueBy(
-      "dark_energy",
-      -ResourceConstants.makeWoodBaseCost
+  magicWindow.addHandlerToActionButton("focus_mana", (action) => {
+    resourceManager.changeValueBy("mana", 1);
+    resourceWindow.updateElement(
+      "mana",
+      makeResourceString(resourceManager.resources["mana"])
     );
-    resourceManager.changeValueBy("wood", ResourceConstants.makeWoodAddValue);
   });
-  resourceManager.addListener((resources) => {
-    if (woodButton) {
-      woodButton.disabled =
-        resources["dark_energy"].value < ResourceConstants.makeWoodBaseCost;
+  magicWindow.addHandlerToActionButton("make_wood", (action) => {
+    if (action.baseCost) {
+      if (resourceManager.resources["mana"].value >= action.baseCost["mana"]) {
+        resourceManager.changeValueBy("mana", -action.baseCost["mana"]);
+        resourceManager.changeValueBy("wood", 1);
+        resourceWindow.updateElemets({
+          wood: makeResourceString(resourceManager.resources["wood"]),
+          mana: makeResourceString(resourceManager.resources["mana"]),
+        });
+      }
     }
   });
 
-  // hut button
-  hutBuyButton = new BuyButton("#hut-btn", {
-    onClick: () => {
-      buildingsManager.addHut();
-      hutBuyButton.updateText(`Hut (${buildingsManager.hutsCount})`);
-      hutBuyButton.updatePriceText(
-        `${
-          Buildings.HUT.baseCost.wood *
-          Math.pow(Buildings.HUT.priceMultiplier, buildingsManager.hutsCount)
-        } wood`
-      );
-    },
-    text: "Hut",
-    priceText: `${
-      Buildings.HUT.baseCost.wood *
-      Math.pow(Buildings.HUT.priceMultiplier, buildingsManager.hutsCount)
-    } wood`,
-  });
   resourceManager.addListener((resources) => {
-    if (
-      resources["wood"].value <
-      Buildings.HUT.baseCost.wood *
-        Math.pow(Buildings.HUT.priceMultiplier, buildingsManager.hutsCount)
-    ) {
-      hutBuyButton.disable();
-    } else {
-      hutBuyButton.activate();
+    for (const [key, value] of Object.entries(magicWindow.magicActions)) {
+      if (value.baseCost) {
+        let disable = false;
+        for (const [name, price] of Object.entries(value.baseCost)) {
+          if (resourceManager.resources[name].value < price) {
+            disable = true;
+            break;
+          }
+        }
+        magicWindow.magicActionsElements[key].prop("disabled", disable);
+      }
     }
   });
 }
