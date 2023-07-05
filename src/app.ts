@@ -11,13 +11,14 @@ import $ from "jquery";
 import { ResourceWindow } from "./views/resource-window";
 import { MagicWindow } from "./views/magic-window";
 import { makeResourceString } from "./utils/utils";
+import { BuildingsWindow } from "./views/buildings-window";
 
 let resourceManager: ResourcesManager;
 let buildingsManager: BuildingsManager;
 let resourceWindow: ResourceWindow;
 let magicWindow: MagicWindow;
+let buildingsWindow: BuildingsWindow;
 let router: Router;
-let hutBuyButton: BuyButton;
 
 function init() {
   // instance router with click navigation buttons
@@ -36,12 +37,14 @@ function init() {
   resourceWindow = new ResourceWindow(resourceManager);
   magicWindow = new MagicWindow();
 
+  buildingsWindow = new BuildingsWindow(buildingsManager);
+
   // save button
   const saveButton = $("#save-button");
   saveButton.on("click", () => resourceManager.saveDataToStorage());
 
   magicWindow.addHandlerToActionButton("focus_mana", (action) => {
-    resourceManager.changeValueBy("mana", 1);
+    resourceManager.addValueToResource("mana", 1);
     resourceWindow.updateElement(
       "mana",
       makeResourceString(resourceManager.resources["mana"])
@@ -50,8 +53,11 @@ function init() {
   magicWindow.addHandlerToActionButton("make_wood", (action) => {
     if (action.baseCost) {
       if (resourceManager.resources["mana"].value >= action.baseCost["mana"]) {
-        resourceManager.changeValueBy("mana", -action.baseCost["mana"]);
-        resourceManager.changeValueBy("wood", 1);
+        resourceManager.subtractValueFromResource(
+          "mana",
+          action.baseCost["mana"]
+        );
+        resourceManager.addValueToResource("wood", 1);
         resourceWindow.updateElemets({
           wood: makeResourceString(resourceManager.resources["wood"]),
           mana: makeResourceString(resourceManager.resources["mana"]),
@@ -65,7 +71,7 @@ function init() {
       if (value.baseCost) {
         let disable = false;
         for (const [name, price] of Object.entries(value.baseCost)) {
-          if (resourceManager.resources[name].value < price) {
+          if (resources[name].value < price) {
             disable = true;
             break;
           }

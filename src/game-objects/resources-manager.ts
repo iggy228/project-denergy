@@ -21,14 +21,26 @@ export class ResourcesManager {
     localStorage.setItem("resources", JSON.stringify(this.resources));
   }
 
-  changeValueBy(resource: string, value: number) {
-    this.resources[resource].value += value;
-    if (this.resources[resource].value > this.resources[resource].capacity) {
+  addValueToResource(resource: string, value: number) {
+    if (
+      this.resources[resource].value + value >
+      this.resources[resource].capacity
+    ) {
       this.resources[resource].value = this.resources[resource].capacity;
+      this.notifyListeners();
+      return;
     }
-    if (this.resources[resource].value < 0) {
+    this.resources[resource].value += value;
+    this.notifyListeners();
+  }
+
+  subtractValueFromResource(resource: string, value: number) {
+    if (this.resources[resource].value - value < 0) {
       this.resources[resource].value = 0;
+      this.notifyListeners();
+      return;
     }
+    this.resources[resource].value -= value;
     this.notifyListeners();
   }
 
